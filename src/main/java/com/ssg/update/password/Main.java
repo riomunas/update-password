@@ -11,11 +11,11 @@ import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import org.apache.commons.lang3.StringUtils;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.util.StringUtils;
 
 /**
  *
@@ -27,7 +27,7 @@ public class Main {
         String pass = "";
         String host = "";
         String name = "";
-        
+
         for (String s : args) {
             if (s.startsWith("-u")) user = s.substring(2);
             if (s.startsWith("-p")) pass = s.substring(2);
@@ -35,6 +35,11 @@ public class Main {
             if (s.startsWith("-db")) name = s.substring(3);
         }
 
+        if (StringUtils.isEmpty(user) || StringUtils.isEmpty(pass) || StringUtils.isEmpty(host)) {
+            System.out.println("Parameter belum terisi...");
+            System.out.println("java -jar update-password-1.0-SNAPSHOT-jar-with-dependencies.jar -u<user> -p<password> -h<host> -db<db>");
+            System.exit(1);
+        }
         Class.forName("com.mysql.jdbc.Driver");  
         Connection conn =(Connection) DriverManager.getConnection("jdbc:mysql://"+host+":3306/"+name+"?autoReconnect=true&useSSL=false",user,pass);
         
